@@ -1,0 +1,213 @@
+/* ---------- Tokens ---------- */
+:root {
+  --ink: #1C1915;
+  --ink-soft: #2A251F;
+  --paper: #EDE7DD;
+  --paper-dim: #B9B2A5;
+  --brass: #C9A227;
+  --line: rgba(237, 231, 221, 0.14);
+  --serif: 'Fraunces', Georgia, serif;
+  --mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --gap: 0.9rem;
+  --container: 1400px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--serif);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a { color: inherit; text-decoration: none; }
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 3px;
+}
+
+h1, h2 { font-weight: 500; margin: 0; }
+
+/* =========================================================
+   MOBILE FIRST — everything below is the base (phone) layout.
+   Larger layouts are progressive enhancements added further
+   down via min-width media queries.
+   ========================================================= */
+
+/* ---------- Header ---------- */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1.1rem 1.1rem;
+  mix-blend-mode: difference;
+}
+
+.site-nav {
+  display: flex;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+}
+
+.site-nav a { opacity: 0.85; transition: opacity 0.2s ease; }
+.site-nav a:hover { opacity: 1; }
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.hero__content {
+  position: relative;
+  padding: 0 1.1rem 3rem;
+  max-width: 32rem;
+  opacity: 0;
+  transform: translateY(14px);
+  animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s forwards;
+}
+
+@keyframes rise { to { opacity: 1; transform: translateY(0); } }
+
+.hero__title {
+  font-size: clamp(2rem, 8vw, 4rem);
+  line-height: 1.1;
+}
+
+/* ---------- Gallery ---------- */
+.gallery {
+  padding: 3.5rem 1.1rem 3rem;
+}
+
+.gallery__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.gallery__head h2 { font-size: 1.5rem; }
+
+.gallery__count {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--paper-dim);
+  margin: 0;
+}
+
+.gallery__grid {
+  columns: 1;
+  column-gap: var(--gap);
+  max-width: var(--container);
+  margin: 0 auto;
+}
+
+.frame {
+  display: inline-block;
+  width: 100%;
+  break-inside: avoid;
+  margin: 0 0 var(--gap);
+  border: 1px solid var(--line);
+  padding: 6px;
+  background: var(--ink-soft);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.frame.is-visible { opacity: 1; transform: translateY(0); }
+
+.frame picture {
+  display: block;
+  overflow: hidden;
+  /* No forced aspect-ratio here: each photo keeps its real proportions
+     (mostly ~2:3 portrait, a couple square) rather than being cropped
+     to fit an invented shape. */
+}
+
+.frame picture img {
+  width: 100%;
+  height: auto;
+}
+
+.frame img {
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.frame:hover img { transform: scale(1.035); }
+
+.frame figcaption {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--paper-dim);
+  padding: 0.55rem 0.25rem 0.15rem;
+}
+
+.frame__num { color: var(--brass); }
+
+/* ---------- About ---------- */
+/* =========================================================
+   TABLET — 700px and up: two columns, wide shots take a full
+   row so their horizontal frame isn't squeezed.
+   ========================================================= */
+@media (min-width: 700px) {
+  .site-header { padding: 1.5rem 2rem; }
+  .site-nav { font-size: 0.78rem; gap: 1.5rem; }
+
+  .hero__content { max-width: 38rem; padding: 0 2rem 4rem; }
+
+  .gallery { padding: 5rem 2rem 4rem; }
+  .gallery__head h2 { font-size: 1.8rem; }
+  .gallery__grid { columns: 2; column-gap: 1.25rem; }
+  .frame { margin-bottom: 1.25rem; }
+}
+
+/* =========================================================
+   DESKTOP — 1100px and up: three columns; large screens (1500px+)
+   step up to four. Masonry via CSS columns lets each photo keep
+   its real proportions (mostly ~2:3 portrait, a couple square)
+   instead of being forced into invented uniform shapes.
+   ========================================================= */
+@media (min-width: 1100px) {
+  .hero__content { max-width: 46rem; padding: 0 3rem 5.5rem; }
+  .hero__title { font-size: clamp(2.4rem, 5vw, 4rem); }
+
+  .gallery { padding: 7rem 3rem 5rem; }
+  .gallery__grid { columns: 3; column-gap: 1.75rem; }
+  .frame { padding: 10px; margin-bottom: 1.75rem; }
+}
+
+@media (min-width: 1500px) {
+  .gallery__grid { columns: 4; }
+}
